@@ -161,6 +161,19 @@ or after Maya's closing line):
 
 **Weakest answer:** quote it briefly, explain what was missing.
 
+**Topics to study before Thursday:**
+List 3-5 concrete topics Drew should review, tied to actual weak spots in this
+interview. Be specific — not "study SQL" but "review SQL window functions —
+David's running-median question caught you flat-footed." Pull from areas like:
+- Federal reporting (AFCARS data elements, NCANDS, NYTD, CFSR Round 4)
+- RI-specific (the consent decree timeline, RICHIST → CCWIS migration, Bradley
+  litigation specifics, St. Mary's findings, the federal monitor's role)
+- Technical (SQL window functions, joins, data quality methods, statistical
+  reasoning for skewed admin data)
+- Trauma-informed framing when discussing youth-in-care data
+- Public-sector ethics and confidentiality
+- Anything else where Drew's answer was thin
+
 **Would they hire?**
 - Maya: yes / no / lean — one sentence.
 - David: yes / no / lean — one sentence.

@@ -51,13 +51,24 @@ The first time you click the mic, the browser will ask for microphone permission
 
 ### Slash commands
 
-| Command     | What it does                                                   |
-| ----------- | -------------------------------------------------------------- |
-| `/feedback` | Drop the roleplay and get scores + things to fix right now     |
-| `/harder`   | Bump the difficulty one notch (Easy → Medium → Hard)           |
-| `/easier`   | Drop the difficulty one notch                                  |
-| `/skip`     | Current panelist skips their turn and hands off                |
-| `/restart`  | Wipe the conversation and start over                           |
+| Command     | What it does                                                         |
+| ----------- | -------------------------------------------------------------------- |
+| `/feedback` | Drop the roleplay and get scores + things to fix + topics to study   |
+| `/coach`    | Pause and see a model STAR-format answer for the question just asked, then re-ask it so Drew can deliver the stronger version |
+| `/harder`   | Bump the difficulty one notch (Easy → Medium → Hard)                 |
+| `/easier`   | Drop the difficulty one notch                                        |
+| `/skip`     | Current panelist skips their turn and hands off                      |
+| `/restart`  | Wipe the conversation and start over                                 |
+
+### Pre-interview news briefing
+
+On the welcome screen there's a **🗞️ Brief me on recent DCYF news** button. It uses Claude's built-in web search to pull the past ~30 days of headlines about DCYF, the consent decree, the federal monitor, St. Mary's, and Bradley Hospital. The briefing also includes "what this means for your interview" — how Drew could subtly reference current events without overplaying it.
+
+Cost: roughly $0.05 per briefing (web search + Sonnet processing). Available again in the sidebar mid-interview if you want to re-read.
+
+### Feedback now includes a study plan
+
+The end-of-interview feedback (or `/feedback` mid-run) now lists 3-5 **specific topics to study before Thursday**, tied to actual weak spots in the run — e.g. *"review SQL window functions — David's running-median question caught you flat-footed"* rather than generic "study SQL." The other sections (scores, things done well, things to fix, strongest/weakest answer, hire decisions) are unchanged.
 
 ### Sidebar
 

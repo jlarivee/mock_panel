@@ -26,6 +26,71 @@ load_dotenv()
 MODEL = os.getenv("ANTHROPIC_MODEL", "claude-opus-4-7")
 MAX_TOKENS = 1024  # plenty for one panelist turn (~3-4 sentences + question)
 
+# News briefing always uses Sonnet 4.6 regardless of main model — cheaper and
+# well-supported for web_search. Briefing is a one-time call, not per-turn.
+NEWS_BRIEFING_MODEL = "claude-sonnet-4-6"
+
+NEWS_BRIEFING_SYSTEM = """\
+You are briefing a job candidate for an interview at the Rhode Island Department
+of Children, Youth, and Families (DCYF) Residential Monitoring Unit (RMU). The
+candidate is interviewing for Data Analyst I on Thursday.
+
+Use the web_search tool to find news from the LAST 30 DAYS (and the past few
+months if the last 30 days are thin) about:
+- DCYF Rhode Island
+- The federal consent decree (United States v. Rhode Island, 1:24-cv-00531) and
+  the federal court-appointed monitor's reports
+- St. Mary's Home for Children investigation aftermath
+- Bradley Hospital litigation aftermath and ADA compliance
+- RMU staffing, policy changes, leadership changes
+- Ashley Deckert (DCYF Director) — public statements, hearings, testimony
+- Office of the Child Advocate (RI) reports
+- RICHIST → CCWIS modernization progress
+
+Return a tight briefing in markdown:
+
+## Recent headlines (past ~30 days)
+- 5-8 bullet points, each with a date and source domain in brackets like [providencejournal.com]
+
+## Persistent context worth knowing
+- 3-4 bullets on the bigger-picture story the candidate should already understand
+  (the consent decree, the two scandals, the current oversight structure)
+
+## What this means for the interview
+- 2-3 sentences on how Drew could subtly reference current events to demonstrate
+  awareness without overplaying it. Be specific.
+
+If you find no relevant news in the past 30 days, say so explicitly at the top,
+then expand the persistent-context section.
+"""
+
+
+def fetch_news_briefing() -> str:
+    """Call Claude with the web_search tool and return the briefing text.
+
+    Uses Sonnet 4.6 + web_search_20260209 (dynamic filtering on by default).
+    Returns a markdown string ready to render.
+    """
+    client = get_client()
+    try:
+        response = client.messages.create(
+            model=NEWS_BRIEFING_MODEL,
+            max_tokens=2048,
+            system=NEWS_BRIEFING_SYSTEM,
+            messages=[
+                {"role": "user", "content": "Brief me on the latest DCYF news."}
+            ],
+            tools=[{"type": "web_search_20260209", "name": "web_search"}],
+        )
+        text_parts = [b.text for b in response.content if b.type == "text"]
+        return "\n\n".join(text_parts).strip() or "(No briefing returned)"
+    except anthropic.APIError as e:
+        return (
+            "**Couldn't fetch briefing.** "
+            f"`{type(e).__name__}: {getattr(e, 'message', str(e))}`\n\n"
+            "Try again, or proceed with the interview without it."
+        )
+
 st.set_page_config(
     page_title="Drew's Mock Panel Interview",
     page_icon="🎙️",
@@ -40,6 +105,7 @@ def init_state() -> None:
     st.session_state.setdefault("messages", [])  # list of {role, content}
     st.session_state.setdefault("difficulty", "Medium")
     st.session_state.setdefault("transcript_started_at", None)
+    st.session_state.setdefault("news_briefing", None)
 
 
 def reset_interview() -> None:
@@ -93,9 +159,9 @@ def call_model(history: list[dict], difficulty: str) -> str:
 # ---------- Slash command handling ----------
 
 SLASH_HELP = (
-    "Commands: `/feedback` get interim feedback · `/harder` raise difficulty · "
-    "`/easier` lower difficulty · `/skip` skip current panelist · `/restart` "
-    "reset the interview."
+    "Commands: `/feedback` get scored feedback · `/coach` see a model answer "
+    "for the current question · `/harder` raise difficulty · `/easier` lower "
+    "difficulty · `/skip` skip current panelist · `/restart` reset."
 )
 
 
@@ -128,6 +194,24 @@ def handle_slash_command(text: str) -> tuple[bool, str | None]:
         return True, "[system note: the candidate used /skip. The current panelist skips their turn and hands off to a different panelist with a fresh question.]"
     if cmd == "/feedback":
         return True, "[system note: the candidate typed /feedback. Drop the roleplay now and provide structured feedback using the feedback format from the system prompt. Then offer to resume the interview.]"
+    if cmd == "/coach":
+        return True, (
+            "[system note: /coach. Pause the roleplay temporarily. Look at the most "
+            "recent question asked by a panelist in this conversation, then output:\n\n"
+            "**🎯 What [panelist name] is really testing:** 1-2 sentences on the underlying competency.\n\n"
+            "**📝 Stronger answer (model framework):** A model answer in STAR format "
+            "(Situation, Task, Action, Result) or another appropriate framework for "
+            "the question type. Use Drew's actual background — URI criminology grad, "
+            "AG Cold Case Unit intern, SQL/Python basics, Tableau/Power BI — make it "
+            "realistic for him, not aspirational.\n\n"
+            "**🔧 Two specific tactics:** Two concrete in-the-moment tweaks Drew could "
+            "use (e.g., 'lead with the specific case file, not the methodology').\n\n"
+            "End with: '**Ready to try again?** Type anything and we'll re-ask the "
+            "same question so you can deliver the stronger answer.'\n\n"
+            "On Drew's next message, return fully to the interview at the same point "
+            "and re-ask the same question (or a close variant) so he can actually "
+            "practice the better answer.]"
+        )
     return False, None
 
 
@@ -149,6 +233,28 @@ def render_welcome() -> None:
                 st.markdown(f"### {p['avatar']} **{p['name']}**")
                 st.markdown(f"*{p['role']}*")
                 st.write(p["tagline"])
+
+    st.write("")
+    st.subheader("Get current on DCYF")
+    st.caption(
+        "Optional: pull the past ~30 days of DCYF / consent decree / monitor "
+        "news before you start. Adds realism and gives you talking points. "
+        "Costs about a nickel via Claude's web search."
+    )
+    if st.session_state.news_briefing is None:
+        if st.button(
+            "🗞️ Brief me on recent DCYF news",
+            use_container_width=True,
+        ):
+            with st.spinner("Searching the web for recent DCYF news..."):
+                st.session_state.news_briefing = fetch_news_briefing()
+            st.rerun()
+    else:
+        with st.expander("🗞️ Recent DCYF news — read this first", expanded=True):
+            st.markdown(st.session_state.news_briefing)
+        if st.button("🔄 Refresh briefing", use_container_width=False):
+            st.session_state.news_briefing = None
+            st.rerun()
 
     st.write("")
     st.info(SLASH_HELP)
@@ -224,6 +330,10 @@ def render_sidebar() -> None:
         st.write("")
         with st.expander("📚 Show Prep Notes (agency context)"):
             st.markdown("```\n" + AGENCY_CONTEXT + "\n```")
+
+        if st.session_state.news_briefing:
+            with st.expander("🗞️ Recent DCYF news"):
+                st.markdown(st.session_state.news_briefing)
 
         st.write("")
         st.caption(SLASH_HELP)
