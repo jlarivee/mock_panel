@@ -1,0 +1,17 @@
+run = "streamlit run app.py --server.port 8080 --server.address 0.0.0.0"
+language = "python3"
+entrypoint = "app.py"
+
+[env]
+PYTHONPATH = "${PYTHONPATH}:${REPL_HOME}"
+
+[nix]
+channel = "stable-24_05"
+
+[deployment]
+run = ["sh", "-c", "streamlit run app.py --server.port 8080 --server.address 0.0.0.0"]
+deploymentTarget = "cloudrun"
+
+[[ports]]
+localPort = 8080
+externalPort = 80
