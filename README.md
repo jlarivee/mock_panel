@@ -1,13 +1,16 @@
 # Drew's Mock Panel Interview
 
-A Streamlit web app that runs a realistic 4-person mock panel interview for the **Data Analyst I** role with the Rhode Island DCYF **Residential Monitoring Unit (RMU)**. Built for Drew Larivee to rehearse before his Thursday interview. Four AI panelists each stay in character, rotate questions, probe weak answers, and produce structured feedback at the end. Powered by the **Anthropic Claude API**.
+A Streamlit web app that runs a realistic 3-person mock panel interview for the **Data Analyst I** role with the Rhode Island DCYF **Residential Monitoring Unit (RMU)**. Built for Drew Larivee to rehearse before his **Thursday, May 21 2026, 12:00 PM** interview at 101 Friendship Street, Providence. Three AI panelists each stay in character, rotate questions, probe weak answers, and produce structured feedback at the end. Powered by the **Anthropic Claude API**.
 
 ## The panel
 
-- **Maya Reynolds** — RMU Administrator (Hiring Manager). Opens and closes. Warm but evaluating.
-- **David Chen** — Senior Data Analyst, Office of Data Analytics. Technical. Short sharp questions.
-- **Patricia Velazquez, LCSW** — Clinical Program Manager. Ethics and tone.
-- **James Whitfield** — HR Business Partner. Conduct, conflict, public service values.
+These are Drew's **real** panelists, pulled from the interview invitation and matched to public DCYF / EOHHS records:
+
+- **Jason Lyon, LICSW** — Administrator, RI Executive Office of Health and Human Services / DCYF. Almost certainly the hiring manager for this role. Opens and closes; asks the broadest mix (mission, behavioral, conflict, public-service values).
+- **Kyeonghee Kim** — Data Analyst, DCYF Office of Data Analytics, Evaluation, and CQI. The technical peer Drew would work alongside. SQL, statistics, data quality, methodology with messy administrative data.
+- **Heather Warner** — Chief of Children's Mental Health, DCYF (Community Services & Behavioral Health). Ethics, confidentiality, trauma-informed framing, communicating technical work to clinical staff.
+
+> **Roleplay only.** Names and titles come from public records (DCYF contact directory, the 2021 DCYF org chart, LinkedIn, the 2014 DCYF Adoption Surveillance Report). Voices are role-typical inferences for practice — not literal impersonations. The panel does not include Linda Lora, who is the State of RI HR Analyst II that scheduled the interview; HR-style behavioral questions are absorbed into Jason's mix.
 
 ## Run locally
 

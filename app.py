@@ -31,21 +31,29 @@ MAX_TOKENS = 1024  # plenty for one panelist turn (~3-4 sentences + question)
 NEWS_BRIEFING_MODEL = "claude-sonnet-4-6"
 
 NEWS_BRIEFING_SYSTEM = """\
-You are briefing a job candidate for an interview at the Rhode Island Department
-of Children, Youth, and Families (DCYF) Residential Monitoring Unit (RMU). The
-candidate is interviewing for Data Analyst I on Thursday.
+You are briefing a job candidate (Drew Larivee) for a Data Analyst I interview
+at the Rhode Island Department of Children, Youth, and Families (DCYF)
+Residential Monitoring Unit. The interview is Thursday, May 21, 2026 at 12:00 PM
+at 101 Friendship Street, Providence.
+
+The panel:
+- Jason Lyon, LICSW — Administrator, RI Executive Office of Health and Human Services / DCYF (likely the RMU Administrator / hiring manager)
+- Kyeonghee Kim — Data Analyst, DCYF Office of Data Analytics, Evaluation, and CQI
+- Heather Warner — Chief of Children's Mental Health, DCYF (Community Services & Behavioral Health)
 
 Use the web_search tool to find news from the LAST 30 DAYS (and the past few
 months if the last 30 days are thin) about:
-- DCYF Rhode Island
-- The federal consent decree (United States v. Rhode Island, 1:24-cv-00531) and
-  the federal court-appointed monitor's reports
+- DCYF Rhode Island and the Residential Monitoring Unit
+- The federal consent decree (United States v. Rhode Island, 1:24-cv-00531)
+  and the federal court-appointed monitor's reports
 - St. Mary's Home for Children investigation aftermath
 - Bradley Hospital litigation aftermath and ADA compliance
 - RMU staffing, policy changes, leadership changes
 - Ashley Deckert (DCYF Director) — public statements, hearings, testimony
 - Office of the Child Advocate (RI) reports
 - RICHIST → CCWIS modernization progress
+- Any recent public mentions of Jason Lyon, Kyeonghee Kim, or Heather Warner
+  in their DCYF/EOHHS capacities (testimony, reports, press releases)
 
 Return a tight briefing in markdown:
 
@@ -53,12 +61,13 @@ Return a tight briefing in markdown:
 - 5-8 bullet points, each with a date and source domain in brackets like [providencejournal.com]
 
 ## Persistent context worth knowing
-- 3-4 bullets on the bigger-picture story the candidate should already understand
+- 3-4 bullets on the bigger-picture story Drew should already understand
   (the consent decree, the two scandals, the current oversight structure)
 
 ## What this means for the interview
 - 2-3 sentences on how Drew could subtly reference current events to demonstrate
-  awareness without overplaying it. Be specific.
+  awareness without overplaying it. Be specific — name a panelist if a recent
+  public statement of theirs would be useful to acknowledge.
 
 If you find no relevant news in the past 30 days, say so explicitly at the top,
 then expand the persistent-context section.
@@ -221,18 +230,25 @@ def render_welcome() -> None:
     st.title("🎙️ Drew's Mock Panel Interview")
     st.caption(
         "DCYF Residential Monitoring Unit · Data Analyst I · "
-        "4-person panel simulation"
+        "Thursday May 21, 2026 · 12:00 PM · 101 Friendship Street, Providence"
     )
     st.write("")
-    st.subheader("Today's panel")
+    st.subheader("Your panel")
 
-    cols = st.columns(2)
-    for i, p in enumerate(PANELISTS):
-        with cols[i % 2]:
+    cols = st.columns(len(PANELISTS))
+    for col, p in zip(cols, PANELISTS):
+        with col:
             with st.container(border=True):
                 st.markdown(f"### {p['avatar']} **{p['name']}**")
                 st.markdown(f"*{p['role']}*")
                 st.write(p["tagline"])
+
+    st.caption(
+        "⚠️ Roleplay only. Names and titles are from public DCYF / EOHHS "
+        "records; voices are role-typical inferences for practice, not literal "
+        "impersonations. Linda Lora (HR coordinator who sent the invite) is "
+        "not on the panel."
+    )
 
     st.write("")
     st.subheader("Get current on DCYF")
@@ -267,7 +283,7 @@ def render_welcome() -> None:
             timespec="seconds"
         )
         # Seed with an empty user turn so the model produces the opening.
-        with st.spinner("Maya is opening the panel..."):
+        with st.spinner("Jason is opening the panel..."):
             opening = call_model(
                 [{"role": "user", "content": "Begin the interview."}],
                 st.session_state.difficulty,
