@@ -159,35 +159,80 @@ RULES THE AI MUST FOLLOW:
 
 FEEDBACK_FORMAT = """\
 STRUCTURED FEEDBACK FORMAT (use this exactly when the candidate types /feedback
-or after Jason's closing line):
+or after Jason's closing line). Every section is required — do not skip any.
 
-## Panel Feedback
+## 📊 Panel Feedback
 
-**Scores (1-5):**
+### Overall
+
+**Overall score: X.X/5** — one short sentence framing the result
+(e.g. 'a solid B+ that needs polish on technical specifics before Thursday',
+or 'borderline — strong on values, thin on data fluency').
+
+**Per-panelist scores (1-5):**
 - Jason Lyon: X/5 — one-line reason
 - Kyeonghee Kim: X/5 — one-line reason
 - Heather Warner: X/5 — one-line reason
 
-**Three things Drew did well:**
-1. ...
-2. ...
-3. ...
+### ✅ Three things that worked
 
-**Three things to fix:**
-1. ...
-2. ...
-3. ...
+For each, name WHY it landed with the panel — not just 'good answer.'
 
-**Strongest answer:** quote it briefly, explain why it landed.
+1. **[short label]** — *Why it landed:* one sentence on the specific move
+   Drew made (concrete example, STAR structure, owning a mistake, naming a
+   federal framework correctly, whatever it was).
+2. **[short label]** — *Why it landed:* ...
+3. **[short label]** — *Why it landed:* ...
 
-**Weakest answer:** quote it briefly, explain what was missing.
+### 🔧 Three things to fix — with concrete swaps
 
-**Topics to study before Thursday:**
+For EACH item, you MUST include:
+  - **What went wrong:** one sentence on the actual gap
+  - **Instead of:** a brief verbatim quote (or paraphrase) of what Drew said
+  - **Try saying:** a specific, deliverable replacement Drew could actually
+    say out loud in the room. Use his real background (URI criminology, Cold
+    Case Unit intern, SQL/Python basics, Tableau/Power BI) — make it
+    realistic, not aspirational.
+
+1. **[short label]**
+   - **What went wrong:** ...
+   - **Instead of:** "..."
+   - **Try saying:** "..."
+2. **[short label]**
+   - **What went wrong:** ...
+   - **Instead of:** "..."
+   - **Try saying:** "..."
+3. **[short label]**
+   - **What went wrong:** ...
+   - **Instead of:** "..."
+   - **Try saying:** "..."
+
+### 🎯 Turning-point questions
+
+Pick the 3-5 questions in the interview that most moved the needle
+(positively or negatively). For each:
+- **The question:** brief paraphrase of what was asked, and who asked it
+- **Score: X/5** — one-line judgment
+- **Sharper answer:** one or two sentences showing how Drew could have
+  delivered it more strongly
+
+### 🏆 Strongest answer
+
+Quote it briefly. Explain in 1-2 sentences why it landed.
+
+### 🪨 Weakest answer
+
+Quote it briefly. Explain what was missing and what would have closed the gap.
+
+### 📚 Topics to study before Thursday
+
 List 3-5 concrete topics Drew should review, tied to actual weak spots in this
 interview. Be specific — not 'study SQL' but 'review SQL window functions —
-Kyeonghee's running-median question caught you flat-footed.' Pull from areas like:
+Kyeonghee's running-median question caught you flat-footed.' Where useful,
+name a free resource (e.g. 'Mode SQL tutorial, window functions section').
+Pull from areas like:
 - Federal reporting (AFCARS data elements, NCANDS, NYTD, CFSR Round 4)
-- RI-specific (the consent decree timeline, RICHIST → CCWIS migration, Bradley
+- RI-specific (consent decree timeline, RICHIST → CCWIS migration, Bradley
   litigation specifics, St. Mary's findings, the federal monitor's role)
 - Technical (SQL window functions, joins, data quality methods, statistical
   reasoning for skewed admin data)
@@ -195,7 +240,8 @@ Kyeonghee's running-median question caught you flat-footed.' Pull from areas lik
 - Public-sector ethics and confidentiality
 - Anything else where Drew's answer was thin
 
-**Would they hire?**
+### 🤝 Would they hire?
+
 - Jason: yes / no / lean — one sentence.
 - Kyeonghee: yes / no / lean — one sentence.
 - Heather: yes / no / lean — one sentence.

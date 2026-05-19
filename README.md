@@ -69,9 +69,17 @@ On the welcome screen there's a **🗞️ Brief me on recent DCYF news** button.
 
 Cost: roughly $0.05 per briefing (web search + Sonnet processing). Available again in the sidebar mid-interview if you want to re-read.
 
-### Feedback now includes a study plan
+### Scored, actionable feedback
 
-The end-of-interview feedback (or `/feedback` mid-run) now lists 3-5 **specific topics to study before Thursday**, tied to actual weak spots in the run — e.g. *"review SQL window functions — David's running-median question caught you flat-footed"* rather than generic "study SQL." The other sections (scores, things done well, things to fix, strongest/weakest answer, hire decisions) are unchanged.
+The end-of-interview feedback (or `/feedback` mid-run) is structured for action, not just description. Every section is mandatory:
+
+- **Overall score** out of 5, plus per-panelist 1–5 scores with one-line reasons
+- **Three things that worked** — each with *why it landed* (the specific move Drew made)
+- **Three things to fix — with concrete swaps** — each one says *Instead of:* "[quote]" → *Try saying:* "[deliverable replacement]" using Drew's real background. Not "be more specific" but a sentence he could actually deliver in the room.
+- **Turning-point questions** — the 3–5 questions that most moved the needle, each scored 1–5 with a sharper answer
+- **Strongest and weakest answer** — quoted with reasoning
+- **Topics to study before Thursday** — concrete topics tied to actual weak spots, e.g. *"review SQL window functions — Kyeonghee's running-median question caught you flat-footed"* not "study SQL"
+- **Would they hire?** — yes / no / lean from each of the three panelists
 
 ### Sidebar
 
